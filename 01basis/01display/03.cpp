@@ -5,10 +5,10 @@
 int main(int argc, char **argv)
 {
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
-    pcl::io::loadPCDFile("/home/liutong/pcl/test/bunny.pcd", *cloud);
+    pcl::io::loadPCDFile("../data/bunny.pcd", *cloud);
 
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_milk(new pcl::PointCloud<pcl::PointXYZRGB>);
-    pcl::io::loadPCDFile("/home/liutong/pcl/test/milk_color.pcd", *cloud_milk);
+    pcl::io::loadPCDFile("../data/milk_color.pcd", *cloud_milk);
     
     //创建一个PCLVisualizer
     boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer(new pcl::visualization::PCLVisualizer("3D Viewer"));

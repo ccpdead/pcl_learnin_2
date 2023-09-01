@@ -10,7 +10,7 @@ int main(int argc, char **argv)
 {
     //load file
     pcl::PointCloud<pcl::PointXYZ>::Ptr source_cloud(new pcl::PointCloud<pcl::PointXYZ>());
-    pcl::io::loadPCDFile("/home/liutong/pcl/test/bunny.pcd", *source_cloud);
+    pcl::io::loadPCDFile("../data/bunny.pcd", *source_cloud);
 /*     if(pcl::io::loadPCDFile(argv[1], *source_cloud )< 0){
         std::cout<<"Error loading point cloud"<<argv[1]<<std::endl<<std::endl;
         return -1;

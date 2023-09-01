@@ -33,7 +33,7 @@ void viewerPsycho(pcl::visualization::PCLVisualizer &viewer)
 int main(int argc, char** argv)
 {
     pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGBA>);
-    pcl::io::loadPCDFile("/home/liutong/pcl/test/pcl_logo.pcd", *cloud);
+    pcl::io::loadPCDFile("../data/pcl_logo.pcd", *cloud);
     pcl::visualization::CloudViewer viewer("cloud viewer");
 
     //这里一直杜塞知道点云被渲染

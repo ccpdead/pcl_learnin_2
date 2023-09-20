@@ -1,3 +1,6 @@
+/*
+ * 法向量估计实现（1）
+ */
 #include<pcl/visualization/cloud_viewer.h>
 #include<iostream>
 #include<pcl/io/io.h>
@@ -8,22 +11,20 @@ int main()
 {
     //load point cloud
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
-    pcl::io::loadPCDFile("./data/milk_color.pcd",*cloud);
+    pcl::io::loadPCDFile("../../../data/c1.pcd",*cloud);
     //estimate normal
     pcl::PointCloud<pcl::Normal>::Ptr normals(new pcl::PointCloud<pcl::Normal>);
 
     //object for normal estimation
-    pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> normalEstimation;
-    //normalEstimation.setIndices()
-    normalEstimation.setInputCloud(cloud);
-    //for every point ,use all neighbors in a radius of 3cm
-    normalEstimation.setRadiusSearch(0.03);
-    // a kd-tree is a data structure that makes searches efficient. mor about it later
-    //the normal estimation object will use it to find nearest neighbors
+    pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> ne;
+
+    ne.setInputCloud(cloud);
+    ne.setRadiusSearch(0.05);
+    //创建一个空的kdtree，讲只传递给法向量估计对象
+    //这个tree对象将会在ne内部根据输入数据进行填充
     pcl::search::KdTree<pcl::PointXYZ>::Ptr kdtree(new pcl::search::KdTree<pcl::PointXYZ>);
-    normalEstimation.setSearchMethod(kdtree);
-    //calculate the normals
-    normalEstimation.compute(*normals);
+    ne.setSearchMethod(kdtree);
+    ne.compute(*normals);
 
     //visualize normals
     pcl::visualization::PCLVisualizer viewer("pcl viewer");

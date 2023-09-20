@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
     
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr point_cloud_ptr (new pcl::PointCloud<pcl::PointXYZRGB>);
     uint8_t r(255), g(15), b(15);
-    for (float z(-1.0); z <= 1.0; z += 0.05) {
+    for (float z(-1.0); z <= 1.0; z += 0.05) {//创建点云
         for (float angle(0.0); angle <= 360.0; angle += 5.0) {
 	        pcl::PointXYZRGB point;
 	        point.x = 0.5 * cosf (pcl::deg2rad(angle));
@@ -33,9 +33,20 @@ int main(int argc, char **argv) {
     }
     point_cloud_ptr->width = (int) point_cloud_ptr->points.size ();
     point_cloud_ptr->height = 1;
-    
-    pcl::visualization::CloudViewer viewer ("test");
-    viewer.showCloud(point_cloud_ptr);
-    while (!viewer.wasStopped()){ };
+    //1通过cloudviewer显示点云
+//    pcl::visualization::CloudViewer viewer ("test");
+//    viewer.showCloud(point_cloud_ptr);
+//    while (!viewer.wasStopped()){ };
+
+    //2通过pclvisualize显示点云
+    boost::shared_ptr<pcl::visualization::PCLVisualizer>viewer(new pcl::visualization::PCLVisualizer("3D Viewer"));
+    viewer->setBackgroundColor(0.05,0.05,0.05,0);
+    viewer->addPointCloud<pcl::PointXYZRGB>(point_cloud_ptr,"sample cloud");
+    viewer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE,5,"sample cloud");\
+
+    viewer->addCoordinateSystem(0.5);
+    while(!viewer->wasStopped()){
+        viewer->spinOnce();
+    }
     return 0;
 }

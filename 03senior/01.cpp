@@ -13,7 +13,7 @@ int main(int argc,char**argv)
 {
     //lading first scan of room.
     pcl::PointCloud<pcl::PointXYZ>::Ptr target_cloud(new pcl::PointCloud<pcl::PointXYZ>);
-    if(pcl::io::loadPCDFile<pcl::PointXYZ>("../data/room_scan1.pcd",*target_cloud) == -1)
+    if(pcl::io::loadPCDFile<pcl::PointXYZ>("../data/person/object_template_0.pcd",*target_cloud) == -1)
     {
         PCL_ERROR("cloudn,t read file room_scan\n");
         return -1;
@@ -22,7 +22,7 @@ int main(int argc,char**argv)
 
     //loading second scan of room from new perspective
     pcl::PointCloud<pcl::PointXYZ>::Ptr input_cloud(new pcl::PointCloud<pcl::PointXYZ>);
-    if(pcl::io::loadPCDFile<pcl::PointXYZ>("../data/room_scan2.pcd",*input_cloud) == -1)
+    if(pcl::io::loadPCDFile<pcl::PointXYZ>("../data/person.pcd",*input_cloud) == -1)
     {
         PCL_ERROR("cloudn,t read file room_scan\n");
         return -1;

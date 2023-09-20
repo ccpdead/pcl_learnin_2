@@ -7,7 +7,7 @@
 int main(int argc, char ** argv)
 {
     pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGBA>);
-    pcl::io::loadPCDFile("../data/berxelPoint3D_1.pcd", *cloud);
+    pcl::io::loadPCDFile("../data/correspondence_grouping/milk_cartoon_all_small_clorox.pcd", *cloud);
     pcl::visualization::CloudViewer viewer("Cloud Viewer");
 
     viewer.showCloud(cloud);

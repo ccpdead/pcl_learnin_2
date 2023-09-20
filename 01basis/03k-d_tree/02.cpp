@@ -1,3 +1,6 @@
+/*
+ * OCtree搜索
+ */
 #include <pcl/point_cloud.h>
 #include <pcl/octree/octree_search.h>
 
@@ -16,7 +19,7 @@ int main(int argc, char **argv)
     cloud->width = 1000;
     cloud->height = 1;
     cloud->points.resize(cloud->width * cloud->height);
-
+    //创建1000个点云
     for (size_t i = 0; i < cloud->points.size(); ++i) {
         cloud->points[i].x = 1024.0f * rand() / (RAND_MAX + 1.0f);
         cloud->points[i].y = 1024.0f * rand() / (RAND_MAX + 1.0f);
@@ -106,6 +109,7 @@ int main(int argc, char **argv)
     pcl::visualization::PCLVisualizer viewer("PCL viewer");
     viewer.setBackgroundColor(0.0, 0.0, 0.5);
     viewer.addPointCloud<pcl::PointXYZ>(cloud, "cloud");
+    viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE,3,"cloud");
 
     pcl::PointXYZ originPoint(0.0, 0.0, 0.0);
     viewer.addLine(originPoint, searchPoint);

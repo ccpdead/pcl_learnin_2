@@ -1,3 +1,6 @@
+/*
+ * Kd-tree搜索
+ */
 #include <pcl/point_cloud.h>
 #include <pcl/kdtree/kdtree_flann.h>
 
@@ -7,11 +10,10 @@
 #include <pcl/visualization/cloud_viewer.h>
 
 
-int main(int argc, char **argv)
-{   
+int main(int argc, char **argv) {
     //用系统时间初始化随机种子
     srand(time(NULL));
-    
+
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
 
     //生成点云数据1000个
@@ -21,11 +23,10 @@ int main(int argc, char **argv)
     cloud->points.resize(cloud->width * cloud->height);
 
     //给点云填充数据 0-1023
-    for(size_t i =0;i<cloud->points.size(); ++i)
-    {
-        cloud->points[i].x = 1024.0f * rand() /(RAND_MAX + 1.0f);
-        cloud->points[i].y = 1024.0f * rand() /(RAND_MAX + 1.0f);
-        cloud->points[i].z = 1024.0f * rand() /(RAND_MAX + 1.0f);
+    for (size_t i = 0; i < cloud->points.size(); ++i) {
+        cloud->points[i].x = 1024.0f * rand() / (RAND_MAX + 1.0f);
+        cloud->points[i].y = 1024.0f * rand() / (RAND_MAX + 1.0f);
+        cloud->points[i].z = 1024.0f * rand() / (RAND_MAX + 1.0f);
     }
     //创建KDtree的实现类kdtreeflann
     pcl::KdTreeFLANN<pcl::PointXYZ> kdtree;
@@ -35,9 +36,9 @@ int main(int argc, char **argv)
     //初始化一个随机的点，作为查询点
     pcl::PointXYZ searchPoint;
 
-    searchPoint.x = 1024.0f * rand() /(RAND_MAX + 1.0f);
-    searchPoint.y = 1024.0f * rand() /(RAND_MAX + 1.0f);
-    searchPoint.z = 1024.0f * rand() /(RAND_MAX + 1.0f);
+    searchPoint.x = 1024.0f * rand() / (RAND_MAX + 1.0f);
+    searchPoint.y = 1024.0f * rand() / (RAND_MAX + 1.0f);
+    searchPoint.z = 1024.0f * rand() / (RAND_MAX + 1.0f);
 
     // K nearest neighbor search
     // 方式一：搜索K个最近邻居
@@ -47,41 +48,40 @@ int main(int argc, char **argv)
     // pointIdxNKNSearch        保存搜索到的临近点的索引
     // pointNKNSquaredDistance  保存对应临近点的距离的平方
     int K = 5;
-    std::vector<int>pointIdxNKNSearch(K);
-    std::vector<float>pointNKNSquaredDistance(K);
-
-    std::cout<<"K nearest neighbor search at ("<<searchPoint.x
-             <<"    "<<searchPoint.y
-             <<"    "<<searchPoint.z
-             <<")with K ="<<K<<std::endl;
-    
-    if(kdtree.nearestKSearch(searchPoint, K, pointIdxNKNSearch, pointNKNSquaredDistance) > 0)
-    {
-        for(size_t i = 0;i < pointIdxNKNSearch.size(); ++i)
-        std::cout<<"    "<<cloud->points[pointIdxNKNSearch[i]].x
-                 <<"    "<<cloud->points[pointIdxNKNSearch[i]].y
-                 <<"    "<<cloud->points[pointIdxNKNSearch[i]].z
-                 <<"(距离平方"<<pointNKNSquaredDistance[i]<<")"<<std::endl;
+    std::vector<int> pointIdxNKNSearch(K);
+    std::vector<float> pointNKNSquaredDistance(K);
+    std::cout << "K nearest neighbor search at (" << searchPoint.x
+              << "    " << searchPoint.y
+              << "    " << searchPoint.z
+              << ")with K =" << K << std::endl;
+    //进行kdtree搜索
+    if (kdtree.nearestKSearch(searchPoint, K, pointIdxNKNSearch, pointNKNSquaredDistance) > 0) {
+        for (size_t i = 0; i < pointIdxNKNSearch.size(); ++i)
+            std::cout << "    " << cloud->points[pointIdxNKNSearch[i]].x
+                      << "    " << cloud->points[pointIdxNKNSearch[i]].y
+                      << "    " << cloud->points[pointIdxNKNSearch[i]].z
+                      << "(距离平方" << pointNKNSquaredDistance[i] << ")" << std::endl;
     }
+
     // Neighbors within radius search
     // 方式二：通过指定半径搜索
     std::vector<int> pointIDxRadiusSearch;
-    std::vector<float>pointRadiusSquaredDistance;
-
+    std::vector<float> pointRadiusSquaredDistance;
     //创建一个随机【0，256】的半径值
     //float radius = 256.0f * rand() /(RAND_MAX + 1.0f);
     float radius = 100;
-    std::cout<<"Neighbors within radius search at (" <<searchPoint.x
-             <<"    "<<searchPoint.y
-             <<"    "<<searchPoint.z
-             <<")with radius ="<<radius<<std::endl;
-    if(kdtree.radiusSearch(searchPoint, radius, pointIDxRadiusSearch, pointRadiusSquaredDistance) > 0){
-        for(size_t i = 0;i < pointIDxRadiusSearch.size();++i)
-        std::cout<<"    "<<cloud->points[pointIDxRadiusSearch[i]].x
-                 <<"    "<<cloud->points[pointIDxRadiusSearch[i]].y
-                 <<"    "<<cloud->points[pointIDxRadiusSearch[i]].z
-                 <<"(距离平方：:"<<pointRadiusSquaredDistance[i]<<")"<<std::endl;
+    std::cout << "Neighbors within radius search at (" << searchPoint.x
+              << "    " << searchPoint.y
+              << "    " << searchPoint.z
+              << ")with radius =" << radius << std::endl;
+    if (kdtree.radiusSearch(searchPoint, radius, pointIDxRadiusSearch, pointRadiusSquaredDistance) > 0) {
+        for (size_t i = 0; i < pointIDxRadiusSearch.size(); ++i)
+            std::cout << "    " << cloud->points[pointIDxRadiusSearch[i]].x
+                      << "    " << cloud->points[pointIDxRadiusSearch[i]].y
+                      << "    " << cloud->points[pointIDxRadiusSearch[i]].z
+                      << "(距离平方：:" << pointRadiusSquaredDistance[i] << ")" << std::endl;
     }
+
     pcl::visualization::PCLVisualizer viewer("PCL Viewer");
     viewer.setBackgroundColor(0.0, 0.0, 0.5);
     viewer.addPointCloud<pcl::PointXYZ>(cloud, "cloud");
@@ -94,7 +94,7 @@ int main(int argc, char **argv)
     //添加一个放大200倍的坐标系
     viewer.addCoordinateSystem(200);
 
-    while(!viewer.wasStopped()){
+    while (!viewer.wasStopped()) {
         viewer.spinOnce();
     }
     return 0;

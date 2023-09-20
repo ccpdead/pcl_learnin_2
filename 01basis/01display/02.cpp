@@ -33,15 +33,15 @@ void viewerPsycho(pcl::visualization::PCLVisualizer &viewer)
 int main(int argc, char** argv)
 {
     pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGBA>);
-    pcl::io::loadPCDFile("../data/pcl_logo.pcd", *cloud);
+    pcl::io::loadPCDFile("../../../data/pcl_logo.pcd", *cloud);
     pcl::visualization::CloudViewer viewer("cloud viewer");
 
     //这里一直杜塞知道点云被渲染
     viewer.showCloud(cloud);
     //只调用一次（非必须）
-    viewer.runOnVisualizationThreadOnce(viewerOneOff);
+    viewer.runOnVisualizationThreadOnce(viewerOneOff);//回调函数，只调用1次
     //每次可视化迭代都会调用一次（频繁调用）
-    viewer.runOnVisualizationThread(viewerPsycho);
+    viewer.runOnVisualizationThread(viewerPsycho);//回调函数
     while(!viewer.wasStopped()){
         user_data++;
     }

@@ -5,10 +5,10 @@
 int main(int argc, char **argv)
 {
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
-    pcl::io::loadPCDFile("../data/bunny.pcd", *cloud);
+    pcl::io::loadPCDFile("../../../data/bunny.pcd", *cloud);
 
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_milk(new pcl::PointCloud<pcl::PointXYZRGB>);
-    pcl::io::loadPCDFile("../data/milk_color.pcd", *cloud_milk);
+    pcl::io::loadPCDFile("../../../data/milk_color.pcd", *cloud_milk);
     
     //创建一个PCLVisualizer
     boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer(new pcl::visualization::PCLVisualizer("3D Viewer"));
@@ -18,7 +18,7 @@ int main(int argc, char **argv)
     //添加一个普通点云
     pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> single_color(cloud, 0, 255, 0);
     viewer->addPointCloud<pcl::PointXYZ> (cloud, single_color, "sample cloud");
-    viewer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, "sample cloud");
+    viewer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "sample cloud");
 
     //添加一个彩色点云及配置
     pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB>rgb(cloud_milk);

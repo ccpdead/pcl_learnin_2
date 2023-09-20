@@ -50,7 +50,7 @@ int main(int argc, char **argv)
         cloud->points[i].y = 1024 * rand() /(RAND_MAX + 1.0f);
         cloud->points[i].z = 1024 * rand() /(RAND_MAX + 1.0f);
     }
-    //strcmp函数比较两个字符串
+    //半径离群滤波
     if(strcmp(argv[1], "-r") == 0)
     {
         pcl::RadiusOutlierRemoval<pcl::PointXYZ> outrem;//半径离群值删除
@@ -60,6 +60,7 @@ int main(int argc, char **argv)
         outrem.setMinNeighborsInRadius(2);
         //aply filter
         outrem.filter(*cloud_filtered);
+        //条件滤波
     }else if(strcmp(argv[1], "-c") == 0)
     {
         //build the condition（条件）

@@ -1,3 +1,6 @@
+/*
+ * 分割平面与蓝牙
+ */
 #include <pcl/ModelCoefficients.h>
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_types.h>
@@ -51,7 +54,7 @@ main(int argc, char **argv) {
 
     // Create the segmentation object for the planar model and set all the parameters
     seg.setOptimizeCoefficients(true);
-    seg.setModelType(pcl::SACMODEL_NORMAL_PLANE);
+    seg.setModelType(pcl::SACMODEL_NORMAL_PLANE);//平面模型
     seg.setNormalDistanceWeight(0.1);
     seg.setMethodType(pcl::SAC_RANSAC);
     seg.setMaxIterations(100);

@@ -1,3 +1,6 @@
+/*
+ *刚性物体的鲁棒估计
+ */
 #include <Eigen/Core>
 #include <pcl/point_types.h>
 #include <pcl/point_cloud.h>
@@ -48,9 +51,9 @@ int main(int argc, char **argv)
     //Downsample
     //为了加快处理数度，我们使用pcl的pcl：：VoxelGrid类将对象和场景云的采样率下降至5mm
     pcl::console::print_highlight("Downsampling....\n");
-    pcl::VoxelGrid<PointNT> grid;
-    const float leaf = 0.005f;
 
+    pcl::VoxelGrid<PointNT> grid;
+    const float leaf = 0.01f;
     grid.setLeafSize(leaf, leaf, leaf);
     grid.setInputCloud(object);
     grid.filter (*object);
@@ -64,46 +67,39 @@ int main(int argc, char **argv)
     nest.setInputCloud(scene);
     nest.compute(*scene);
 
-    //Estimate features
-    //对于下采样点云中每个点，我们使用pcl中的pcl::FPFHEstimationOMP类来计算用于对齐过程中
-    //用于匹配的快速点特征直方图（FPFH）描述符
+    // Estimate features
+    // 对于下采样点云中的每个点，我们现在使用PCL的pcl::FPFHEstimationOMP<>类来计算用于对齐过程中用于匹配的快速点特征直方图（FPFH）描述符。
     pcl::console::print_highlight("Estimationg features...\n");
     FeatureEstimationT fest;
     fest.setRadiusSearch(0.025);
-
     fest.setInputCloud(object);
     fest.setInputNormals(object);
     fest.compute(*object_features);
-
     fest.setInputCloud(scene);
     fest.setInputNormals(scene);
     fest.compute(*scene_features);
-    //perform alignment
-    //sampleconsensusPrerejective 实现有效的RANSAC姿势估计循环
+
+    // Perform alignment
+    // SampleConsensusPrerejective 实现了有效的RANSAC姿势估计循环
     pcl::console::print_highlight("Starting alignment.....\n");
     pcl::SampleConsensusPrerejective<PointNT, PointNT, FeatureT> align;
     align.setInputCloud(object);
     align.setSourceFeatures(object_features);
     align.setInputTarget(scene);
     align.setTargetFeatures(scene_features);
-    align.setMaximumIterations(50000);//Number of RANSAC iterations
-    //样本数，在对象和场景之间进行采样的点对应数，至少三个点才能计算姿势
-    align.setNumberOfSamples(3);//Number of points to sample for generating/prerejecting a pose
-    //对应随机性，我们可以在N个最佳匹配之间随机选择，而不是将每个对象FPFH描述符匹配到场景中最接近的匹配特征，这增加了必要的
-    //迭代，也是算法对一场匹配具有鲁棒性
-    align.setCorrespondenceRandomness(5);//number of nearest features to use
-    //多边形相似度阀值，该直也接近1，则贪婪程度也高，算法变得月块
-    align.setSimilarityThreshold(0.9f);//polygonal edge length similarity threshold
-    //内在阀值，用于确定变换后的对象点是否正确对齐到最近的场景点
-    align.setMaxCorrespondenceDistance(2.5f * leaf);//Inlier threshold
-    //正确对齐的点绝对数量是使用inlier阀值确定的
-    align.setInlierFraction(0.25f);//required inlier fraction for accepting a pose hypothesis
+    align.setMaximumIterations(50000);
+    align.setNumberOfSamples(3);
+    align.setCorrespondenceRandomness(5);
+    align.setSimilarityThreshold(0.9f);
+    align.setMaxCorrespondenceDistance(2.5f * leaf);
+    align.setInlierFraction(0.25f);
     {
-        //执行对齐配准过程
-        pcl::ScopeTime t("Alignment");
-        //对齐的对象储存在点云中，
-        align.align(*object_aligned);
+
+        pcl::ScopeTime t("Alignment");//执行对齐配准过程
+        align.align(*object_aligned);//对齐的对象储存在点云中，
     }
+
+
     if(align.hasConverged())
     {
         //Print results

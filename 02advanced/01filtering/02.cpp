@@ -21,8 +21,7 @@ int main(int argc, char **argv)
     <<"date points ("<<pcl::getFieldsList(*cloud)<<").";
     //创建一个长宽分别是1cm的体素过滤器，cloud作为输入数据，cloud-filtered作为输出数据
     float leftSize = 0.01f;
-    //Create the filtering object
-    pcl::VoxelGrid<pcl::PCLPointCloud2> sor;
+    pcl::VoxelGrid<pcl::PCLPointCloud2> sor;    //Create the filtering object
     sor.setInputCloud(cloud);
     sor.setLeafSize(leftSize, leftSize, leftSize);
     sor.filter(*cloud_filtered);
